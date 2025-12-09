@@ -1,28 +1,6 @@
 import requests
 import streamlit as st
 
-URL = "https://miracle-tabien.streamlit.app/data"
-
-if st.button("json"):
-    try:
-        response = requests.post(
-            json = { "url": "https://www.ministryoftesting.com/software-testing-glossary/test" },
-            url = URL
-        )
-        response.raise_for_status()
-    except Exception as exception:
-        st.error(exception)
-
-if st.button("data"):
-    try:
-        response = requests.post(
-            data = { "url": "https://www.ministryoftesting.com/software-testing-glossary/test" },
-            url = URL
-        )
-        response.raise_for_status()
-    except Exception as exception:
-        st.error(exception)
-
 # บันทึก key ล่าสุดเมื่อมี Key กรอกเข้ามา
 if "key" in st.query_params:
     st.session_state.key = st.query_params.get("key")

@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from streamlit_app import URL
 import requests
 import streamlit as st
 import time
 
 CORRECT_KEY_INPUT_TEXT = "โปรดกรอก Key ที่ถูกต้อง"
+URL = "https://miracle-tabien.streamlit.app/data"
 WAITING_TEXT = ["กำลังรอ QR Code   ", "กำลังรอ QR Code .  ", "กำลังรอ QR Code .. ", "กำลังรอ QR Code ..."]
 WAITING_TEXT_LENGTH = len(WAITING_TEXT)
 WAITING_TEXT_SPEED = 1.25
@@ -45,7 +45,7 @@ if "key" in st.session_state:
                     st.write(st.session_state.url)
                 st.write("Success")
             except Exception as exception:
-                st.write(exception)
+                st.error(exception)
                 pass
             
             # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
