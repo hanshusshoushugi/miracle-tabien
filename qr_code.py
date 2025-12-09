@@ -47,22 +47,6 @@ if st.button("Data"):
 if "key" in st.session_state:
     with center, st.empty():
         while True:
-            try:
-                response = requests.get(
-                    params = { "url": ""},
-                    url = URL
-                )
-                
-                # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
-                response.raise_for_status()
-                st.write(response)
-                st.session_state.url = response.json().url
-                st.write(st.session_state.url)
-                break
-            except Exception as exception:
-                st.write(exception)
-                break
-            
             # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
             if "url" in st.session_state:
                 try:         
@@ -93,5 +77,21 @@ if "key" in st.session_state:
                     SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
             else:
                 SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
+
+                try:
+                    response = requests.get(
+                        params = { "url": ""},
+                        url = URL
+                    )
+                    
+                    # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
+                    response.raise_for_status()
+                    st.write(response)
+                    st.session_state.url = response.json().url
+                    st.write(st.session_state.url)
+                except Exception as exception:
+                    st.write(exception)
+                    
+                time.sleep(5)
 else:
     SHOW_TEXT(CORRECT_KEY_INPUT_TEXT)
