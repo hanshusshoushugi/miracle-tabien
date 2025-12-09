@@ -22,13 +22,10 @@ waiting_indicator = 0
 
 # แสดงข้อความ กำลังรอ QR Code
 def SHOW_TEXT(text):
-    st.subheader(
-        anchor = False,
-        body = text,
-        divider = False,
-        help = None,
-        text_alignment = "left",
-        width = "stretch"
+    st.spinner(
+        show_time = False, 
+        text = text,
+        width = "content"
     )
     return None
 
@@ -82,4 +79,11 @@ if "key" in st.session_state:
             else:
                 SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
 else:
-    SHOW_TEXT(CORRECT_KEY_INPUT_TEXT)
+    st.subheader(
+        anchor = False,
+        body = CORRECT_KEY_INPUT_TEXT,
+        divider = False,
+        help = None,
+        text_alignment = "left",
+        width = "stretch"
+    )
