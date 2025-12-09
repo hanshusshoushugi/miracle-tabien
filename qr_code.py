@@ -22,7 +22,7 @@ waiting_indicator = 0
 
 # แสดงข้อความ กำลังรอ QR Code
 def SHOW_TEXT(text):
-    st.header(
+    st.subheader(
         anchor = False,
         body = text,
         divider = False,
@@ -41,7 +41,6 @@ if st.button("Data"):
             url = URL
         )
         response.raise_for_status()
-        st.write("Success")
     except Exception as exception:
         st.error(exception)
 
@@ -49,14 +48,18 @@ if "key" in st.session_state:
     with center, st.empty():
         while True:
             try:
-                response = requests.get(URL)
-
+                response = requests.get(
+                    params = { "url": ""}
+                    url = URL
+                )
+                st.write("Test1")
                 # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
                 response.raise_for_status()
-                st.write("Test")
+                st.write("Test2")
                 st.session_state.url = response.json().url
                 st.write(st.session_state.url)
             except Exception as exception:
+                st.write(exception)
                 pass
             
             # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
