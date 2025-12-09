@@ -6,7 +6,6 @@ import streamlit as st
 import time
 
 CORRECT_KEY_INPUT_TEXT = "โปรดกรอก Key ที่ถูกต้อง"
-URL = "https://miracle-tabien.streamlit.app/data"
 WAITING_TEXT = ["กำลังรอ QR Code   ", "กำลังรอ QR Code .  ", "กำลังรอ QR Code .. ", "กำลังรอ QR Code ..."]
 WAITING_TEXT_LENGTH = len(WAITING_TEXT)
 WAITING_TEXT_SPEED = 1.25
