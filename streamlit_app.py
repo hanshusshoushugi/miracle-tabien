@@ -10,13 +10,16 @@ if "key" in st.query_params:
     
     try:
         response = requests.get(URL)
-
+        st.write("Test1")
         # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
         response.raise_for_status()
-        
+        st.write("Test2")
+        st.write(response.json())
         st.session_state.url = response.json().url
-        
+        st.write("Success")
+        st.write(st.session_state.url)
     except Exception as exception:
+        st.write(exception)
         pass
 
 # สร้าง Page ย่อย
@@ -44,3 +47,4 @@ st.navigation(
     ],
     position = "sidebar"
 ).run()
+
