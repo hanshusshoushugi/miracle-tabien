@@ -49,7 +49,7 @@ if "key" in st.session_state:
         while True:
             try:
                 response = requests.get(
-                    params = { "url": ""}
+                    params = { "url": ""},
                     url = URL
                 )
                 st.write("Test1")
