@@ -34,36 +34,35 @@ def SHOW_TEXT(text):
 
 if "key" in st.session_state:
     with center, st.empty():
-        while True:
-            # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
-            if "url" in st.session_state:
-                try:         
-                    response = requests.get(st.session_state.url)
+        # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
+        if "url" in st.session_state:
+            try:         
+                response = requests.get(st.session_state.url)
 
-                    # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
-                    response.raise_for_status()
+                # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
+                response.raise_for_status()
 
-                    # ค้นหา component ที่เป็น tag <img> ทั้งหมดใน response
-                    img_tags = BeautifulSoup(response.content, 'html.parser').find_all('img')
+                # ค้นหา component ที่เป็น tag <img> ทั้งหมดใน response
+                img_tags = BeautifulSoup(response.content, 'html.parser').find_all('img')
 
-                    # นำรูปแรกสุด (รูป QR Code) ที่เจอมาแสดง ถ้าไม่เจอรูปให้แสดงข้อความว่า กำลังรอ QR Code
-                    if(len(img_tags) > 0):
-                        src = img_tags[0].get('src')
-                        if src:
-                            absolute_src = urljoin(url, src)
-                            st.image(
-                                caption = "โปรดสแกน QR Code",
-                                channels = "RGB",
-                                clamp = False,
-                                image = absolute_src,
-                                output_format = "auto",
-                                width = "content"
-                            )
-                    else:
-                        SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
-                except Exception as exception:
+                # นำรูปแรกสุด (รูป QR Code) ที่เจอมาแสดง ถ้าไม่เจอรูปให้แสดงข้อความว่า กำลังรอ QR Code
+                if(len(img_tags) > 0):
+                    src = img_tags[0].get('src')
+                    if src:
+                        absolute_src = urljoin(url, src)
+                        st.image(
+                            caption = "โปรดสแกน QR Code",
+                            channels = "RGB",
+                            clamp = False,
+                            image = absolute_src,
+                            output_format = "auto",
+                            width = "content"
+                        )
+                else:
                     SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
-            else:
+            except Exception as exception:
                 SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
+        else:
+            SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
 else:
     SHOW_TEXT(CORRECT_KEY_INPUT_TEXT)
