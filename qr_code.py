@@ -48,6 +48,7 @@ if "key" in st.session_state:
                     st.write(st.session_state.url)
                 st.write("Test3")
             except Exception as exception:
+                st.write(exception)
                 pass
             
             # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
