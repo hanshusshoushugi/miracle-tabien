@@ -36,7 +36,10 @@ if st.button("Data"):
     try:
         response = requests.post(
             json = {
-                "url" : "https://www.ministryoftesting.com/software-testing-glossary/test"
+                "url": "https://www.ministryoftesting.com/software-testing-glossary/test"
+            },
+            headers = {
+                "url": ""
             },
             url = URL
         )
@@ -80,13 +83,13 @@ if "key" in st.session_state:
 
                 try:
                     response = requests.get(
-                        params = { "url": ""},
+                        params = { "url": "" },
                         url = URL
                     )
                     
                     # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
                     response.raise_for_status()
-                    st.write(response)
+                    st.write(response.text)
                     st.session_state.url = response.json().url
                     st.write(st.session_state.url)
                 except Exception as exception:
