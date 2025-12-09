@@ -1,4 +1,3 @@
-import requests
 import streamlit as st
 
 # บันทึก key ล่าสุดเมื่อมี Key กรอกเข้ามา
