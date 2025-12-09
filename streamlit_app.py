@@ -1,21 +1,7 @@
-from flask import Flask, request
 import requests
 import streamlit as st
 
 URL = "https://miracle-tabien.streamlit.app/data"
-
-app = Flask(__name__)
-
-@app.route('/data', methods=['POST'])
-def get_data_from_post_request():
-    if request.is_json:
-        data = request.json
-        st.write("json")
-    else:
-        data = request.form
-        st.write("form")
-    st.session_state.url = data.url
-    return None
 
 if st.button("json"):
     try:
