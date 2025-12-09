@@ -58,9 +58,10 @@ if "key" in st.session_state:
                 st.write(response)
                 st.session_state.url = response.json().url
                 st.write(st.session_state.url)
+                break
             except Exception as exception:
                 st.write(exception)
-                pass
+                break
             
             # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
             if "url" in st.session_state:
