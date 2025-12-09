@@ -90,10 +90,8 @@ if "key" in st.session_state:
                     # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
                     response.raise_for_status()
                     st.write(response.text)
-                    st.session_state.url = response.json().url
-                    st.write(st.session_state.url)
                 except Exception as exception:
-                    st.write(exception)
+                    st.error(exception)
                     
                 time.sleep(5)
 else:
