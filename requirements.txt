@@ -1,3 +1,4 @@
 Beautifulsoup4 == 4.14.3
-Request == 2.32.5
+Requests == 2.32.5
+
 Streamlit == 1.52.1
