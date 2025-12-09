@@ -1,4 +1,41 @@
+from flask import Flask, request
+import requests
 import streamlit as st
+
+URL = "https://miracle-tabien.streamlit.app/data"
+
+app = Flask(__name__)
+
+@app.route('/data', methods=['POST'])
+def get_data_from_post_request():
+    if request.is_json:
+        data = request.json
+        st.write("json")
+    else:
+        data = request.form
+        st.write("form")
+    st.session_state.url = data.url
+    return None
+
+if st.button("json"):
+    try:
+        response = requests.post(
+            json = { "url": "https://www.ministryoftesting.com/software-testing-glossary/test" },
+            url = URL
+        )
+        response.raise_for_status()
+    except Exception as exception:
+        st.error(exception)
+
+if st.button("data"):
+    try:
+        response = requests.post(
+            data = { "url": "https://www.ministryoftesting.com/software-testing-glossary/test" },
+            url = URL
+        )
+        response.raise_for_status()
+    except Exception as exception:
+        st.error(exception)
 
 # บันทึก key ล่าสุดเมื่อมี Key กรอกเข้ามา
 if "key" in st.query_params:
