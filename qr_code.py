@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 CORRECT_KEY_INPUT_TEXT = "โปรดกรอก Key ที่ถูกต้อง"
+URL = "https://miracle-tabien.streamlit.app/data"
 WAITING_TEXT = ["กำลังรอ QR Code   ", "กำลังรอ QR Code .  ", "กำลังรอ QR Code .. ", "กำลังรอ QR Code ..."]
 WAITING_TEXT_LENGTH = len(WAITING_TEXT)
 WAITING_TEXT_SPEED = 1.25
@@ -31,9 +32,33 @@ def SHOW_TEXT(text):
     )
     return None
 
+if st.button("Data"):
+    try:
+        response = requests.post(
+            json = {
+                "url" : "https://www.ministryoftesting.com/software-testing-glossary/test"
+            },
+            url = URL
+        )
+        response.raise_for_status()
+        st.write("Success")
+    except Exception as exception:
+        st.error(exception)
+
 if "key" in st.session_state:
     with center, st.empty():
         while True:
+            try:
+                response = requests.get(URL)
+
+                # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
+                response.raise_for_status()
+                st.write("Test")
+                st.session_state.url = response.json().url
+                st.write(st.session_state.url)
+            except Exception as exception:
+                pass
+            
             # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
             if "url" in st.session_state:
                 try:         
