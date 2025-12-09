@@ -14,7 +14,7 @@ if "key" in st.query_params:
         # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
         response.raise_for_status()
         st.write("Test2")
-        st.write(response.json())
+        st.write(response)
         st.session_state.url = response.json().url
         st.write("Success")
         st.write(st.session_state.url)
@@ -47,4 +47,5 @@ st.navigation(
     ],
     position = "sidebar"
 ).run()
+
 
