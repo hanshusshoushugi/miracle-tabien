@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urljoin
 import requests
 import streamlit as st
 import time
 
 CORRECT_KEY_INPUT_TEXT = "โปรดกรอก Key ที่ถูกต้อง"
-URL = "https://miracle-tabien.streamlit.app/data"
 WAITING_TEXT = ["กำลังรอ QR Code   ", "กำลังรอ QR Code .  ", "กำลังรอ QR Code .. ", "กำลังรอ QR Code ..."]
 WAITING_TEXT_LENGTH = len(WAITING_TEXT)
 WAITING_TEXT_SPEED = 1.25
@@ -22,32 +22,19 @@ waiting_indicator = 0
 
 # แสดงข้อความ กำลังรอ QR Code
 def SHOW_TEXT(text):
-    st.spinner(
-        show_time = False, 
-        text = text,
-        width = "content"
+    st.subheader(
+        anchor = False,
+        body = text,
+        divider = False,
+        help = None,
+        text_alignment = "left",
+        width = "stretch"
     )
     return None
 
 if "key" in st.session_state:
     with center, st.empty():
         while True:
-            try:
-                response = requests.get(url = URL)
-
-                # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
-                response.raise_for_status()
-                st.write(response.text)
-                data = response.json()
-                st.write("Test")
-                if data:
-                    st.session_state.url = data.url
-                    st.write(st.session_state.url)
-                st.write("Success")
-            except Exception as exception:
-                st.error(exception)
-                pass
-            
             # เช็คว่ามี url บันทึกไว้ใน session หรือไม่
             if "url" in st.session_state:
                 try:
@@ -79,11 +66,4 @@ if "key" in st.session_state:
             else:
                 SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
 else:
-    st.subheader(
-        anchor = False,
-        body = CORRECT_KEY_INPUT_TEXT,
-        divider = False,
-        help = None,
-        text_alignment = "left",
-        width = "stretch"
-    )
+    SHOW_TEXT(CORRECT_KEY_INPUT_TEXT)
