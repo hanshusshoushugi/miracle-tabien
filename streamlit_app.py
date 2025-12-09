@@ -1,16 +1,4 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
 import streamlit as st
-
-app = FastAPI()
-
-class Item(BaseModel):
-    url: str
-
-@app.post("/data")
-async def receive_data(item: Item):
-    st.write("Sucess")
-    return {"status": "success", "received_message": item.url}
 
 # บันทึก key ล่าสุดเมื่อมี Key กรอกเข้ามา
 if "key" in st.query_params:
