@@ -33,63 +33,66 @@ def SHOW_TEXT(text):
     )
     return None
 
-try:
-    # ดึงข้อมูลจาก Google Sheet
-    data_frame = st.connection(
-        "gsheets",
-        type = GSheetsConnection
-    ).read(
-        nrows = 2,
-        ttl = "600",
-        usecols = [0, 1],
-        worksheet = "Sheet"
-    )
-    key = ""
-
-    for index, data_row in data_frame.iterrows():
-        key = data_row["key"]
-        
-        # ถ้า key เป็น float ให้แปลงเป็น integer
-        if type(key) == float:
-            key = int(key)
-        
-        # เช็ค key เทียบกับ key ใน Google Sheet
-        if str(key) == st.query_params.get("key"):
-            st.session_state.key = key
-            st.session_state.url = data_row["url"]
-            break
-except Exception as exception:
-    pass
-
-if "url" not in st.session_state:
+# เช็ค key ใน url ถ้าไม่มีให้แสดงข้อความ "โปรดกรอก Key ที่ถูกต้อง"
+if "key" not in st.query_params:
     SHOW_TEXT(CORRECT_KEY_INPUT_TEXT)
 else:
-    with center, st.empty():
-        while True:
-            try:
-                response = requests.get(url = st.session_state.url)
+    try:
+        # ดึงข้อมูลจาก Google Sheet
+        data_frame = st.connection(
+            "gsheets",
+            type = GSheetsConnection
+        ).read(
+            nrows = 2,
+            ttl = "600",
+            usecols = [0, 1],
+            worksheet = "Sheet"
+        )
+        key = ""
 
-                # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
-                response.raise_for_status()
+        for index, data_row in data_frame.iterrows():
+            key = data_row["key"]
+            
+            # ถ้า key เป็น float ให้แปลงเป็น integer
+            if type(key) == float:
+                key = int(key)
+            
+            # เช็ค key เทียบกับ key ใน Google Sheet
+            if str(key) == st.query_params.get("key"):
+                st.session_state.key = key
+                st.session_state.url = data_row["url"]
+                break
+    except Exception as exception:
+        pass
 
-                # ค้นหา component ที่เป็น tag <img> ทั้งหมดใน response
-                img_tags = BeautifulSoup(response.content, 'html.parser').find_all('img')
+    # เช็ค url ใน session ถ้าไม่มีหรือค้นหา component ที่เป็น tag <img> ไม่เจอ ให้แสดงข้อความ "กำลังรอ QR Code"
+    if "url" in st.session_state:
+        with center, st.empty():
+            while True:
+                try:
+                    response = requests.get(url = st.session_state.url)
 
-                # นำรูปแรกสุด (รูป QR Code) ที่เจอมาแสดง ถ้าไม่เจอรูปให้แสดงข้อความว่า กำลังรอ QR Code
-                if(len(img_tags) > 0):
-                    src = img_tags[0].get('src')
-                    if src:
-                        absolute_src = urljoin(st.session_state.url, src)
-                        st.image(
-                            caption = "โปรดสแกน QR Code",
-                            channels = "RGB",
-                            clamp = False,
-                            image = absolute_src,
-                            output_format = "auto",
-                            width = "content"
-                        )
-                else:
+                    # เช็ค response status ถ้า error ให้แสดงข้อความว่า กำลังรอ QR Code
+                    response.raise_for_status()
+
+                    # ค้นหา component ที่เป็น tag <img> ทั้งหมดใน response
+                    img_tags = BeautifulSoup(response.content, 'html.parser').find_all('img')
+
+                    # นำรูปแรกสุด (รูป QR Code) ที่เจอมาแสดง ถ้าไม่เจอรูปให้แสดงข้อความว่า กำลังรอ QR Code
+                    if(len(img_tags) > 0):
+                        src = img_tags[0].get('src')
+                        if src:
+                            absolute_src = urljoin(st.session_state.url, src)
+                            st.image(
+                                caption = "โปรดสแกน QR Code",
+                                channels = "RGB",
+                                clamp = False,
+                                image = absolute_src,
+                                output_format = "auto",
+                                width = "content"
+                            )
+                    else:
+                        SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
+                except Exception as exception:
                     SHOW_TEXT(WAITING_TEXT[int((time.perf_counter() - start_time) * WAITING_TEXT_SPEED) % WAITING_TEXT_LENGTH])
-            except Exception as exception:
-                st.write(exception)
-                pass
+                    pass
