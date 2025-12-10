@@ -33,7 +33,7 @@ def SHOW_TEXT(text):
     )
     return None
 
-# เช็ค key ใน url ถ้าไม่มีให้แสดงข้อความ "โปรดกรอก Key ที่ถูกต้อง"
+# ถ้าไม่มี key ใน url ให้แสดงข้อความ "โปรดกรอก Key ที่ถูกต้อง"
 if "key" not in st.query_params:
     SHOW_TEXT(CORRECT_KEY_INPUT_TEXT)
 else:
@@ -65,8 +65,10 @@ else:
     except Exception as exception:
         pass
 
-    # เช็ค url ใน session ถ้าไม่มีหรือค้นหา component ที่เป็น tag <img> ไม่เจอ ให้แสดงข้อความ "กำลังรอ QR Code"
-    if "url" in st.session_state:
+    # ถ้า key ไม่ตรงกับใน Google Sheet ให้แสดงข้อความ "โปรดกรอก Key ที่ถูกต้อง"
+    if "key" not in st.session_state:
+        SHOW_TEXT(CORRECT_KEY_INPUT_TEXT)
+    else:
         with center, st.empty():
             while True:
                 try:
