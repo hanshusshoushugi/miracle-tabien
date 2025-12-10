@@ -1,9 +1,5 @@
 import streamlit as st
 
-# บันทึก key ล่าสุดเมื่อมี Key กรอกเข้ามา
-if "key" in st.query_params:
-    st.session_state.key = st.query_params.get("key")
-
 # สร้าง Page ย่อย
 about_me = st.Page(
     default = False,
