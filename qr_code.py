@@ -43,7 +43,6 @@ else:
             "gsheets",
             type = GSheetsConnection
         ).read(
-            nrows = 2,
             ttl = "600",
             usecols = [0, 1],
             worksheet = "Sheet"
